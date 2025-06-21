@@ -38,6 +38,7 @@ button {
 
 #answers-window {
     display: flex;
+    flex-direction: column;
     box-sizing: border-box;
     justify-content: center;
     align-items: center;
@@ -45,4 +46,18 @@ button {
     height:125px;
     background-color: white;
     border: 1px solid black;
+}
+   
+#input-window {
+    display:flex;
+    width: 215px;
+    height: 62.5px;
+    background-color: lightgoldenrodyellow;
+}
+
+#output-window {
+    display:flex;
+    width: 215px;
+    height:62.5px;
+    background-color:lightgray;
 }
