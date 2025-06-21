@@ -1,0 +1,48 @@
+#main-window {
+    display: flex;
+    box-sizing: border-box;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    margin: auto;
+    flex-wrap: wrap;
+    width: max-content;
+    height: max-content;
+    border: 2px solid black;
+}
+
+#buttons-window {
+    display:flex;
+    box-sizing: border-box;
+    width:215px;
+    height:322.5px;
+    flex-wrap: wrap;
+    align-items:flex-start;
+}
+
+button {
+    display: flex;
+    padding: 25px;
+    width: 53.75px;
+    height: 53.75px;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    background-color: gray;
+}
+
+.white-bg {
+    background-color: white;
+    border: 1px solid black;
+}
+
+#answers-window {
+    display: flex;
+    box-sizing: border-box;
+    justify-content: center;
+    align-items: center;
+    width:215px;
+    height:125px;
+    background-color: white;
+    border: 1px solid black;
+}
