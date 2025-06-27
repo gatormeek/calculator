@@ -7,13 +7,21 @@ let outputWindow = document.querySelector("#output-window");
 let clearCurrent = document.querySelector("#clear-current");
 let clearAll = document.querySelector("#clear-all");
 let backspace = document.querySelector("#backspace");
+let parentheses = document.querySelector("#parentheses");
 userArray = [];
 outputArray = [];
 let currentNumber='';
 //1
 backspace.addEventListener('click', () => {
-    userArray.pop();
-    inputWindow.textContent = userArray.join('');
+    if (currentNumber !== '') {
+        currentNumber = currentNumber.slice(0, -1);
+    } else if (userArray.length > 0) {
+        let lastItem = userArray.pop();
+        if (lastItem.length > 1 && !['+', '-', '*', '÷', '(', ')'].includes(lastItem)) {
+            currentNumber = lastItem.slice(0, -1);
+        }
+    }
+    inputWindow.textContent = userArray.join('') + currentNumber;
 })
 //2
 clearAll.addEventListener('click', () => {
@@ -31,15 +39,10 @@ clearCurrent.addEventListener('click', () => {
 })
 //4
 operators.forEach(link => {
-    //for each operator button...
     link.addEventListener('click', () => {
-        //add an event listener for 'click' event
         if (currentNumber === '' && userArray.length === 0) {
             return;
         }
-        //if currentNumber is empty and userArray.length is 0, don't do anything
-        //const lastItem = userArray[userArray.length-1];
-        //declare lastItem variable as the last item of the userArray
         if (currentNumber !== '') {
             userArray.push(currentNumber);
             currentNumber='';
@@ -47,14 +50,9 @@ operators.forEach(link => {
         if (["+", "-", "*", "÷"].includes(userArray.at(-1))) {
             return;
         }
-        //if the last item of userArray includes an operator, don't do anything
-        //if currentNumber is not empty, push currentNumber to userArray
-        //reset currentNumber to 0
         userArray.push(currentNumber);
         userArray.push(link.textContent);
-        //push the textContent of the operator button to userArray
         inputWindow.textContent = userArray.join('');
-        //make userArray the textContent of the inputWindow
     });
 });
 //5
@@ -73,6 +71,21 @@ numbers.forEach(link => {
     })
 })
 //7
+parentheses.addEventListener('click', () => {
+    let parenthesesStart = '(';
+    let parenthesesEnd = ')';
+    if (!inputWindow.textContent.includes(parenthesesStart) && !inputWindow.textContent.includes(parenthesesEnd)) {
+        userArray.push(parenthesesStart);
+        inputWindow.textContent = userArray.join('');
+    } else if (inputWindow.textContent.includes(parenthesesStart) && !inputWindow.textContent.includes(parenthesesEnd)) {
+        currentNumber = currentNumber + parenthesesEnd
+        inputWindow.textContent = userArray.join('') + currentNumber;
+    } else if (inputWindow.textContent.lastIndexOf('(') < inputWindow.textContent.lastIndexOf(')')) {
+        userArray.push(parenthesesStart);
+        inputWindow.textContent = userArray.join('');
+    }
+})
+//8
 hoverSelector.forEach(link => {
     link.addEventListener('mouseenter', () => {
         link.style.color='white';
