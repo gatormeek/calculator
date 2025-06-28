@@ -36,6 +36,10 @@ button {
     border: 1px solid black;
 }
 
+#zero {
+    width: 107.5px;
+}
+
 #answers-window {
     display: flex;
     flex-direction: column;

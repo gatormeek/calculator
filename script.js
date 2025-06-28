@@ -8,6 +8,8 @@ let clearCurrent = document.querySelector("#clear-current");
 let clearAll = document.querySelector("#clear-all");
 let backspace = document.querySelector("#backspace");
 let parentheses = document.querySelector("#parentheses");
+let squared = document.querySelector("#squared");
+let squareRoot = document.querySelector("#square-root");
 userArray = [];
 outputArray = [];
 let currentNumber='';
@@ -15,7 +17,8 @@ let currentNumber='';
 backspace.addEventListener('click', () => {
     if (currentNumber !== '') {
         currentNumber = currentNumber.slice(0, -1);
-    } else if (userArray.length > 0) {
+    } 
+    else if (userArray.length > 0) {
         let lastItem = userArray.pop();
         if (lastItem.length > 1 && !['+', '-', '*', '÷', '(', ')'].includes(lastItem)) {
             currentNumber = lastItem.slice(0, -1);
@@ -47,16 +50,18 @@ operators.forEach(link => {
             userArray.push(currentNumber);
             currentNumber='';
         }
-        if (["+", "-", "*", "÷"].includes(userArray.at(-1))) {
+        if (["+", "-", "*", "÷", "("].includes(userArray.at(-1))) {
             return;
         }
-        userArray.push(currentNumber);
         userArray.push(link.textContent);
         inputWindow.textContent = userArray.join('');
     });
 });
 //5
 decimal.addEventListener('click', () => {
+    if(currentNumber.slice(-1) === '²') {
+        return;
+    }
     if(currentNumber.includes(".")) {
             return;
         }
@@ -66,26 +71,60 @@ decimal.addEventListener('click', () => {
 //6
 numbers.forEach(link => {
     link.addEventListener('click', () => {
+        if (currentNumber.slice(-1)  === '²') {
+            return;
+        }
         currentNumber += link.textContent;
         inputWindow.textContent = userArray.join('') + currentNumber;
     })
 })
 //7
 parentheses.addEventListener('click', () => {
-    let parenthesesStart = '(';
-    let parenthesesEnd = ')';
-    if (!inputWindow.textContent.includes(parenthesesStart) && !inputWindow.textContent.includes(parenthesesEnd)) {
-        userArray.push(parenthesesStart);
-        inputWindow.textContent = userArray.join('');
-    } else if (inputWindow.textContent.includes(parenthesesStart) && !inputWindow.textContent.includes(parenthesesEnd)) {
-        currentNumber = currentNumber + parenthesesEnd
+    let openCount = (userArray.join('') + currentNumber).split('(').length - 1;
+    let closeCount = (userArray.join('') + currentNumber).split(')').length - 1;
+    let lastChar = userArray.at(-1);
+
+    if (openCount === closeCount || lastChar === ')') {
+        if (lastChar === '(') {
+            return;
+        }
+        if (currentNumber !== '') {
+            userArray.push(currentNumber);
+            currentNumber = '';
+        }
+        userArray.push('(');
+    } else {
+        if ((currentNumber !== '' && !isNaN(currentNumber)) || lastChar === ')') {
+            if (currentNumber !== '') {
+                userArray.push(currentNumber);
+                currentNumber = '';
+            }
+            userArray.push(')');
+        }
+    }
+    inputWindow.textContent = userArray.join('') + currentNumber;
+})
+//8 need to prevent square after operator
+squared.addEventListener('click', () => {
+    if (["%", "*", "÷", "+", "-"].includes(userArray.at(-1))) {
+        return;
+    }
+    if (currentNumber.slice(-1) === "²" || currentNumber.slice(-1) === "√") {
+        return;
+    } else {
+        currentNumber += '²';
         inputWindow.textContent = userArray.join('') + currentNumber;
-    } else if (inputWindow.textContent.lastIndexOf('(') < inputWindow.textContent.lastIndexOf(')')) {
-        userArray.push(parenthesesStart);
-        inputWindow.textContent = userArray.join('');
     }
 })
-//8
+//9
+squareRoot.addEventListener('click', () => {
+    if (currentNumber.slice(-1) === '√' && !["+", "-", "*", "÷", "("].includes(userArray.at(-1))) {
+        return;
+    }
+    currentNumber += '√';
+    inputWindow.textContent = userArray.join('') + currentNumber;
+})
+//10
 hoverSelector.forEach(link => {
     link.addEventListener('mouseenter', () => {
         link.style.color='white';
