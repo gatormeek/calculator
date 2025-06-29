@@ -57,6 +57,7 @@ button {
     width: 215px;
     height: 62.5px;
     background-color: lightgoldenrodyellow;
+    overflow-x: auto;
 }
 
 #output-window {

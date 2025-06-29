@@ -10,6 +10,7 @@ let backspace = document.querySelector("#backspace");
 let parentheses = document.querySelector("#parentheses");
 let squared = document.querySelector("#squared");
 let squareRoot = document.querySelector("#square-root");
+let equals = document.querySelector("#equals")
 userArray = [];
 outputArray = [];
 let currentNumber='';
@@ -43,6 +44,9 @@ clearCurrent.addEventListener('click', () => {
 //4
 operators.forEach(link => {
     link.addEventListener('click', () => {
+        if (userArray.length === 0 && currentNumber.length === 0 && outputWindow.textContent !== '') {
+            userArray.push(outputWindow.textContent);
+        }
         if (currentNumber === '' && userArray.length === 0) {
             return;
         }
@@ -108,6 +112,11 @@ parentheses.addEventListener('click', () => {
 })
 //8 need to prevent square after operator
 squared.addEventListener('click', () => {
+    if (userArray.length === 0 && currentNumber.length === 0 && outputWindow.textContent !== '') {
+            userArray.push(outputWindow.textContent);
+            userArray.push('²');
+            inputWindow.textContent = userArray.join('') + currentNumber;
+        }
     if (userArray.at(-1) === ')') {
         currentNumber += '²';
         userArray.push(currentNumber);
@@ -125,6 +134,12 @@ squared.addEventListener('click', () => {
 })
 //9
 squareRoot.addEventListener('click', () => {
+    if (userArray.length === 0 && currentNumber.length === 0 && outputWindow.textContent !== '') {
+            userArray.push('√(');
+            userArray.push(outputWindow.textContent);
+            inputWindow.textContent = userArray.join('') + currentNumber;
+            return;
+        }
     if (currentNumber !== '' || userArray.at(-1) === ')') {
         return;
     }
@@ -141,4 +156,17 @@ hoverSelector.forEach(link => {
         link.style.color='';
         link.style.background='';
     })
+})
+//11
+equals.addEventListener('click', () => {
+    let expr = inputWindow.textContent;
+    expr = expr.replace(/√\(([^)]+)\)/g, '(($1)**0.5)');
+    expr = expr.replace(/√(\d+(\.\d+)?)/g, '($1**0.5)');
+    expr = expr.replace(/(\([^\(\)]+\))²/g, '($1**2)');
+    expr = expr.replace(/(\d+)²/g, '($1**2)');
+    expr = expr.replace(/÷/g, '/');
+    let result = eval(expr);
+    outputWindow.textContent = result;
+    userArray = [];
+    currentNumber = '';
 })
