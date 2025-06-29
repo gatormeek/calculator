@@ -59,6 +59,9 @@ operators.forEach(link => {
 });
 //5
 decimal.addEventListener('click', () => {
+    if (userArray.at(-1) === ')') {
+        return;
+    }
     if(currentNumber.slice(-1) === '²') {
         return;
     }
@@ -71,6 +74,9 @@ decimal.addEventListener('click', () => {
 //6
 numbers.forEach(link => {
     link.addEventListener('click', () => {
+        if (userArray.at(-1) === ')') {
+            return;
+        }
         if (currentNumber.slice(-1)  === '²') {
             return;
         }
@@ -78,38 +84,39 @@ numbers.forEach(link => {
         inputWindow.textContent = userArray.join('') + currentNumber;
     })
 })
-//7
+//7 prevent opening parentheses if no operator, unless userArray.length === 0, prevent a number after closing parentheses if no operator
 parentheses.addEventListener('click', () => {
     let openCount = (userArray.join('') + currentNumber).split('(').length - 1;
     let closeCount = (userArray.join('') + currentNumber).split(')').length - 1;
     let lastChar = userArray.at(-1);
-
-    if (openCount === closeCount || lastChar === ')') {
-        if (lastChar === '(') {
-            return;
-        }
-        if (currentNumber !== '') {
-            userArray.push(currentNumber);
-            currentNumber = '';
-        }
-        userArray.push('(');
-    } else {
-        if ((currentNumber !== '' && !isNaN(currentNumber)) || lastChar === ')') {
-            if (currentNumber !== '') {
-                userArray.push(currentNumber);
+    //'(' logic
+    if (currentNumber !== '') {
+            userArray.push(currentNumber)
                 currentNumber = '';
             }
-            userArray.push(')');
-        }
+    if ((userArray.length === 0 && currentNumber.length === 0) || (openCount === closeCount && ['+', '-', '*', '÷', '√'].includes(userArray.at(-1)))) {
+        userArray.push('(');
+        inputWindow.textContent = userArray.join('') + currentNumber;
+        return;
+    } else if (userArray.length !== 0 && openCount > closeCount && !['+', '-', '*', '÷', '√', '('].includes(userArray.at(-1))) {
+        userArray.push(')');
+        inputWindow.textContent = userArray.join('') + currentNumber;
+        return;
+        } else {
+        return;
     }
-    inputWindow.textContent = userArray.join('') + currentNumber;
 })
 //8 need to prevent square after operator
 squared.addEventListener('click', () => {
-    if (["%", "*", "÷", "+", "-"].includes(userArray.at(-1))) {
-        return;
-    }
-    if (currentNumber.slice(-1) === "²" || currentNumber.slice(-1) === "√") {
+    if (userArray.at(-1) === ')') {
+        currentNumber += '²';
+        userArray.push(currentNumber);
+        currentNumber = '';
+        inputWindow.textContent = userArray.join('') + currentNumber;
+    } else if (currentNumber === '' || 
+        currentNumber.slice(-1) === '²' || 
+        currentNumber.slice(-1) === '√' ||
+        currentNumber.slice(-1) === '(') {
         return;
     } else {
         currentNumber += '²';
@@ -118,7 +125,7 @@ squared.addEventListener('click', () => {
 })
 //9
 squareRoot.addEventListener('click', () => {
-    if (currentNumber.slice(-1) === '√' && !["+", "-", "*", "÷", "("].includes(userArray.at(-1))) {
+    if (currentNumber !== '' || userArray.at(-1) === ')') {
         return;
     }
     currentNumber += '√';
